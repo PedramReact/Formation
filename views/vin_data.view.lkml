@@ -57,7 +57,8 @@ view: vin_data {
     sql: ${TABLE}.model ;;
   }
 
-  dimension_group: order {
+#changement de la colonne order date
+  dimension_group: order_date{
     type: time
     timeframes: [
       raw,
