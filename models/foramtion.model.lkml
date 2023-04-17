@@ -12,7 +12,7 @@ persist_with: foramtion_default_datagroup
 
 #explore: pareto {}
 
-#explore: ig_2j {}
+explore: ig_2j {}
 
 #explore: data_pareto_v2 {}
 
