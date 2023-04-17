@@ -1,7 +1,7 @@
 connection: "renault-gcp-sub-react"
 
 # include all the views
-include: "/views/**/vin_data.view"
+include: "/views/vin_data.view"
 
 datagroup: foramtion_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
