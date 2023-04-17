@@ -57,21 +57,34 @@ view: vin_data {
     sql: ${TABLE}.model ;;
   }
 
-#changement de la colonne order date
-  dimension_group: order_date{
+
+
+dimension: order_date {
+  type: string
+  sql:  ${TABLE}.order_date   ;;
+}
+
+  dimension_group: order_date_string_to_date{
     type: time
     timeframes: [
-      raw,
       date,
+      day_of_week,
       week,
       month,
-      quarter,
       year
     ]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}.order_date ;;
+    sql:${order_date} ;;
+
+
   }
+  dimension: date_formatted {
+    group_label: "Created" label: "Date"
+    sql: ${invoice_date};;
+    html: {{ rendered_value | date: "%A %d %h %y" }};;
+  }
+
 
   dimension: order_id {
     type: string
@@ -99,4 +112,34 @@ view: vin_data {
     type:  average
     sql: ${catalogue_price};;
   }
+
+  dimension: type_de_carbourant{
+    sql: case
+    when  ${TABLE}.fuel_type='DIESEL'then "Gasoil"
+    when  ${TABLE}.fuel_type='ELECTRIC'then "Electrique"
+    when  ${TABLE}.fuel_type='PETROL'then "Essance"
+    when  ${TABLE}.fuel_type='PETROL CNGGAZ' or  ${TABLE}.fuel_type='PETROL LPG' then "GAZ"
+    else "inconuu"
+    end
+    ;;
+
+  }
+  dimension: Concat_Model_Version {
+    type: string
+    sql: concat(${model},'-',${version}) ;;
+  }
+
+  dimension: Brand_Logo {
+    type: string
+    sql: ${brand};;
+    html:
+              {%  if brand._value == "ALPINE" %}
+              <img src="https://www.retro-laser.com/wp-content/uploads/2021/12/2021-12-13-at-08-17-16.jpg" height="170" width="255">
+              {% elsif  brand._value == "DACIA" %}
+              <img src="https://upload.wikimedia.org/wikipedia/fr/4/4d/Logo_Dacia.svg" height="170" width="255">
+              {% elsif brand._value == "RENAULT" %}
+              <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/Renault_2009_logo.svg" height="170" width="255">
+              {%  endif %} ;;
+  }
+
 }
