@@ -87,4 +87,16 @@ view: vin_data {
     type: count
     drill_fields: [dealer_name]
   }
+  measure: min_catalogue_price{
+    type:  min
+    sql: ${catalogue_price};;
+}
+  measure: max_catalogue_price{
+    type:  max
+    sql: ${catalogue_price};;
+  }
+  measure: avg_catalogue_price{
+    type:  average
+    sql: ${catalogue_price};;
+  }
 }
