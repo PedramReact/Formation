@@ -10,10 +10,5 @@ datagroup: foramtion_default_datagroup {
 
 persist_with: foramtion_default_datagroup
 
-#explore: pareto {}
-
-#explore: ig_2j {}
-
-#explore: data_pareto_v2 {}
 
 explore: vin_data {}
