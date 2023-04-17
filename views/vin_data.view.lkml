@@ -142,4 +142,16 @@ dimension: order_date {
               {%  endif %} ;;
   }
 
+
+  parameter: date{
+    type: unquoted
+    allowed_value: {
+      label: "2020"
+      value: "2020"
+    }
+    allowed_value: {
+      label: "2019"
+      value: "2019"
+    }
+  }
 }
