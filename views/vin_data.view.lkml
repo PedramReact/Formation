@@ -34,6 +34,7 @@ view: vin_data {
 
   dimension_group: invoice {
     type: time
+    group_label: "Date"
     timeframes: [
       raw,
       date,
@@ -80,7 +81,8 @@ dimension: order_date {
 
   }
   dimension: date_formatted {
-    group_label: "Created" label: "Date"
+    group_label: "Date"
+    label: "Date"
     sql: ${invoice_date};;
     html: {{ rendered_value | date: "%A %d %h %y" }};;
   }
@@ -103,17 +105,20 @@ dimension: order_date {
   measure: min_catalogue_price{
     type:  min
     sql: ${catalogue_price};;
+    value_format:"0.0€"
 }
   measure: max_catalogue_price{
     type:  max
     sql: ${catalogue_price};;
+    value_format:"0.0€"
   }
   measure: avg_catalogue_price{
     type:  average
     sql: ${catalogue_price};;
+    value_format:"0.0€"
   }
 
-  dimension: type_de_carbourant{
+  dimension: type_de_carburant{
     sql: case
     when  ${TABLE}.fuel_type='DIESEL'then "Gasoil"
     when  ${TABLE}.fuel_type='ELECTRIC'then "Electrique"
