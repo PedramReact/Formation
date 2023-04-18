@@ -87,7 +87,6 @@ dimension: order_date {
     html: {{ rendered_value | date: "%A %d %h %y" }};;
   }
 
-
   dimension: order_id {
     type: string
     sql: ${TABLE}.order_id ;;
@@ -129,9 +128,42 @@ dimension: order_date {
     ;;
 
   }
+
+
+
+
+  dimension: type_de_carburantLookml{
+   case :{
+      when:{
+        sql: ${TABLE}.fuel_type='DIESEL';;
+        label: "Gasoil"
+      }
+      when:{
+         sql: ${TABLE}.fuel_type='ELECTRIC';;
+         label: "Electrique"
+      }
+      when:{
+         sql: ${TABLE}.fuel_type='PETROL';;
+         label: "Essance"
+      }
+
+    when:{
+      sql: ${TABLE}.fuel_type='PETROL CNGGAZ' or ${TABLE}.fuel_type='PETROL LPG'  ;;
+      label: "GAZ"
+    }
+
+
+  }
+
+    }
+
+
+
+
   dimension: Concat_Model_Version {
     type: string
     sql: concat(${model},'-',${version}) ;;
+    drill_fields: [brand, model, version, catalogue_price]
   }
 
   dimension: Brand_Logo {
@@ -146,6 +178,13 @@ dimension: order_date {
               <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/Renault_2009_logo.svg" height="170" width="255">
               {%  endif %} ;;
   }
+
+measure: datedif{
+sql:date_diff(${vin_data.invoice_date},${vin_data.order_date_string_to_date_date},day) ;;
+}
+
+
+
 
 
 
