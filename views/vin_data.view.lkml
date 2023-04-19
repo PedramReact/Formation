@@ -22,6 +22,11 @@ view: vin_data {
     sql: ${TABLE}.dealer_name ;;
   }
 
+  dimension: dealer_name_underscore {
+    type: string
+    sql: replace(${dealer_name}, " ", "_") ;;
+  }
+
   dimension: engine {
     type: string
     sql: ${TABLE}.engine ;;
