@@ -79,7 +79,10 @@ dimension: order_date {
     type: count
     drill_fields: [dealer_name]
   }
-
+measure: count_of_model {
+  type: : count
+  drill_fields: [model]
+}
 
 
 
