@@ -22,6 +22,11 @@ view: vin_data {
     sql: ${TABLE}.dealer_name ;;
   }
 
+  dimension: DealerNameModifier {
+    type: string
+    sql: replace(${dealer_name},"-", " ") ;;
+  }
+
   dimension: engine {
     type: string
     sql: ${TABLE}.engine ;;
