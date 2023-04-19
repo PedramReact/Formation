@@ -4,6 +4,8 @@ connection: "renault-gcp-sub-react"
 include: "/views/vin_data.view"
 include: "/views/ig_2j.view"
 include: "/views/pareto.view"
+# importer les datas
+#include: "/views/**.view"
 
 
 datagroup: foramtion_default_datagroup {
