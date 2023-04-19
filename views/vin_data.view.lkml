@@ -79,6 +79,10 @@ dimension: order_date {
     type: count
     drill_fields: [dealer_name]
   }
+  measure: count_sessions {
+    type: count_distinct
+    sql: ${brand} ;;
+  }
 
 
 
