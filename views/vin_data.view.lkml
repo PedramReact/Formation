@@ -82,7 +82,7 @@ dimension: order_date {
 
   measure: count_distinct_model {
     type: count_distinct
-    sql: ${TABLE}.model;;
+    sql: ${model};;
   }
 
 
