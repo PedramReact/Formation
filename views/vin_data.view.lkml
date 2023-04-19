@@ -83,9 +83,22 @@ dimension: order_date {
     type: count_distinct
     sql: ${model} ;;
   }
+  dimension: dealer_n {
+    type: string
+    sql: replace(${TABLE}.dealer_name, ' ', '_') ;;
+  }
 
-
-
+  dimension: fueltype {
+    sql: CASE
+         WHEN fuel_type = 'DIESEL' THEN 'Gasoil'
+         WHEN fuel_type = 'ELECTRIC' THEN 'Electrique'
+         WHEN fuel_type = 'PETROL' THEN 'essence'
+         WHEN fuel_type = 'PETROL CNGGAZ' THEN 'Gaz'
+        WHEN fuel_type = 'PETROL LPG' THEN 'Gaz'
+         ELSE fuel_type
+         END ;;
+    type: string
+  }
 
 
 
