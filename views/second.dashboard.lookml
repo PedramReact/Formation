@@ -1,5 +1,5 @@
-dashboard: finalone12
-title: FINALONEtest
+-dashboard: finalone
+title: FINALONE
 layout: newspaper
 preferred_viewer: dashboards-next
 description: ''
