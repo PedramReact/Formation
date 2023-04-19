@@ -80,6 +80,11 @@ dimension: order_date {
     drill_fields: [dealer_name]
   }
 
+  measure: CountModel{
+    type:  count_distinct
+    sql: ${model} ;;
+  }
+
 
 
 
