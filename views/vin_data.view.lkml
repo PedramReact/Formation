@@ -81,7 +81,7 @@ dimension: order_date {
   }
   measure: count_sessions {
     type: count_distinct
-    sql: ${brand} ;;
+    sql: ${model} ;;
   }
 
 
