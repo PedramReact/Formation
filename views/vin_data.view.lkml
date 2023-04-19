@@ -60,10 +60,10 @@ view: vin_data {
 
 
 
-dimension: order_date {
-  type: string
-  sql:  ${TABLE}.order_date   ;;
-}
+  dimension: order_date {
+    type: string
+    sql:  ${TABLE}.order_date   ;;
+  }
 
   dimension: order_id {
     type: string
@@ -89,12 +89,13 @@ dimension: order_date {
   }
 
   dimension: fueltype {
+
     sql: CASE
          WHEN fuel_type = 'DIESEL' THEN 'Gasoil'
          WHEN fuel_type = 'ELECTRIC' THEN 'Electrique'
          WHEN fuel_type = 'PETROL' THEN 'essence'
          WHEN fuel_type = 'PETROL CNGGAZ' THEN 'Gaz'
-        WHEN fuel_type = 'PETROL LPG' THEN 'Gaz'
+         WHEN fuel_type = 'PETROL LPG' THEN 'Gaz'
          ELSE fuel_type
          END ;;
     type: string
