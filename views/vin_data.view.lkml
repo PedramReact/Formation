@@ -60,10 +60,10 @@ view: vin_data {
 
 
 
-dimension: order_date {
-  type: string
-  sql:  ${TABLE}.order_date   ;;
-}
+  dimension: order_date {
+    type: string
+    sql:  ${TABLE}.order_date   ;;
+  }
 
   dimension: order_id {
     type: string
