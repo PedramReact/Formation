@@ -6,7 +6,7 @@ include: "/views/ig_2j.view"
 include: "/views/pareto.view"
 include: "/views/data_pareto_v2.view"
 include: "/views/second.dashboard"
-include: "/third.dashboard"
+include: "/views/third.dashboard"
 
 datagroup: foramtion_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;

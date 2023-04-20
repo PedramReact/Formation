@@ -101,6 +101,14 @@ view: vin_data {
     type: string
   }
 
+  measure: count_by_brand {
+    type: count_distinct
+    sql: ${TABLE}.brand ;;
+    drill_fields: [model, fuel_type, order_date]
+  }
+
+
+
 
 
 }
