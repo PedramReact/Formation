@@ -12,6 +12,21 @@ view: vin_data {
     sql: ${TABLE}.catalogue_price ;;
   }
 
+  measure: min_catalogue_price {
+    type: min
+    sql: ${TABLE}.catalogue_price ;;
+  }
+
+  measure: max_catalogue_price {
+      type: max
+      sql: ${TABLE}.catalogue_price ;;
+    }
+
+  measure: avg_catalogue_price {
+      type: average
+      sql: ${TABLE}.catalogue_price ;;
+    }
+
   dimension: client_discount {
     type: number
     sql: ${TABLE}.client_discount ;;
@@ -37,9 +52,49 @@ view: vin_data {
     sql: ${TABLE}.fuel_type ;;
   }
 
+  dimension: fuel_type_new {
+    type: string
+    case: {
+      when: {
+        sql: ${fuel_type} = "DIESEL" ;;
+        label: "Gasoil"
+      }
+      when: {
+        sql: ${fuel_type} = "ELECTRIC" ;;
+        label: "Electrique"
+      }
+      when: {
+        sql: ${fuel_type} = "PETROL" ;;
+        label: "Essence"
+      }
+      when: {
+        sql: ${fuel_type} = "PETROL CNGGAZ" ;;
+        label: "Gaz"
+      }
+      when: {
+        sql: ${fuel_type} = "PETROL LPG" ;;
+        label: "Gaz"
+      }
+      # possibly more when statements
+      else: "TBDF"
+    }
+  }
+
+  dimension: model_version {
+    type:  string
+    sql:  concat(${model},"-", ${version}) ;;
+  }
+
+  dimension_group: invoice_2 {
+    hidden:  yes
+    type: time
+    sql: ${invoice_date} ;;
+    html:{{ rendered_value | date: "%A, %B %e, %Y" }};;
+  }
+
   dimension_group: invoice {
     type: time
-    group_label: "Date"
+    group_label: "Invoice Date"
     timeframes: [
       raw,
       date,
@@ -63,12 +118,26 @@ view: vin_data {
     sql: ${TABLE}.model ;;
   }
 
+  dimension: order_date_old {
+    type: string
+    sql:  ${TABLE}.order_date   ;;
+  }
 
-
-dimension: order_date {
-  type: string
-  sql:  ${TABLE}.order_date   ;;
-}
+  dimension_group: order_date {
+    type: time
+    group_label: "Order Date"
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: yes
+    datatype: date
+    sql: ${TABLE}.order_date ;;
+  }
 
   dimension: order_id {
     type: string
@@ -90,7 +159,52 @@ dimension: order_date {
     sql: ${model};;
   }
 
+  dimension: diff_date_order_invoice {
+    type:  number
+    sql: date_diff(${invoice_date}, ${order_date_date}, DAY) ;;
+  }
 
+  measure: min_diff_date_order_invoice {
+    type: min
+    sql:  ${diff_date_order_invoice} ;;
+  }
 
+  measure: max_diff_date_order_invoice {
+    type: max
+    sql:  ${diff_date_order_invoice} ;;
+    html:
+      {% if value > 300 %}
+      <font color="darkred">{{ rendered_value }}</font>
+      {% else %}
+      {{ rendered_value }}
+      {% endif %} ;;
+  }
+
+  measure: avg_diff_date_order_invoice {
+    type: average
+    sql:  ${diff_date_order_invoice} ;;
+    html:
+      {% if value < 100 %}
+      <font color="darkgreen">{{ rendered_value }}</font>
+      {% else %}
+      {{ rendered_value }}
+      {% endif %} ;;
+  }
+
+  dimension: logo {
+    type: string
+    sql:  ${brand} ;;
+    html:
+    {% if brand._value == "ALPINE" %}
+    <img src="https://www.retro-laser.com/wp-content/uploads/2021/12/2021-12-13-at-08-17-16.jpg" width="100" height="100"/>
+    {% elsif brand._value == "DACIA" %}
+    <img src="https://upload.wikimedia.org/wikipedia/fr/4/4d/Logo_Dacia.svg" width="100" height="100"/>
+    {% elsif brand._value == "RENAULT" %}
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/Renault_2009_logo.svg" width="100" height="100"/>
+    {% else %}
+    {{ rendered_value }}
+    {% endif %};;
+
+  }
 
 }
