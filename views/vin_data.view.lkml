@@ -37,6 +37,9 @@ view: vin_data {
     sql: ${TABLE}.dealer_name ;;
   }
 
+  # Modifier la colonne Dealer par lookml pour avoir « - »
+  # à la place de «   » par les deux solution Lookml et custom fields.
+
   dimension: dealer_name_underscore {
     type: string
     sql: replace(${dealer_name}, " ", "_") ;;
@@ -51,6 +54,12 @@ view: vin_data {
     type: string
     sql: ${TABLE}.fuel_type ;;
   }
+
+  # Création d’une nouvel colonne base sur Fuel Type et remplacer :
+  # DIESEL par Gasoil
+  # ELECTRIC par Electrique
+  # PETROL par Essence
+  # PETROL CNGGAZ et PETROL LPG par GAZ
 
   dimension: fuel_type_new {
     type: string
@@ -80,10 +89,16 @@ view: vin_data {
     }
   }
 
+  #Concaténation de colonne model avec version par
+  # les deux solution de lookml et custom fields
+
   dimension: model_version {
     type:  string
     sql:  concat(${model},"-", ${version}) ;;
   }
+
+# Modifier la colonne invoice_date
+# pour pouvoir afficher sous le forme suivent:
 
   dimension_group: invoice_2 {
     hidden:  yes
@@ -159,15 +174,21 @@ view: vin_data {
     sql: ${model};;
   }
 
+  # Nombre de jour entre Order_Date et Invoice_Date
+
   dimension: diff_date_order_invoice {
     type:  number
     sql: date_diff(${invoice_date}, ${order_date_date}, DAY) ;;
   }
 
+  # Min Nombre de jour entre Order_Date et Invoice_Date
+
   measure: min_diff_date_order_invoice {
     type: min
     sql:  ${diff_date_order_invoice} ;;
   }
+
+  # Max Nombre de jour entre Order_Date et Invoice_Date
 
   measure: max_diff_date_order_invoice {
     type: max
@@ -180,6 +201,8 @@ view: vin_data {
       {% endif %} ;;
   }
 
+  # Moyenne Nombre de jour entre Order_Date et Invoice_Date
+
   measure: avg_diff_date_order_invoice {
     type: average
     sql:  ${diff_date_order_invoice} ;;
@@ -190,6 +213,9 @@ view: vin_data {
       {{ rendered_value }}
       {% endif %} ;;
   }
+
+  # Créer une dimension dans lookml qui affiche logo
+  # de brand par rapport le choix d’utilisateur
 
   dimension: logo {
     type: string
