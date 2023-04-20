@@ -5,8 +5,8 @@ include: "/views/vin_data.view"
 include: "/views/ig_2j.view"
 include: "/views/pareto.view"
 include: "/views/data_pareto_v2.view"
-include: "/views/second.dashboard"
-include: "/views/third.dashboard"
+#include: "/views/second.dashboard"
+#include: "/views/firas_dashboard.dashboard"
 
 datagroup: foramtion_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;

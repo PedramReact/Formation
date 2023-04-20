@@ -108,6 +108,52 @@ view: vin_data {
   }
 
 
+  dimension: model_version {
+    type: string
+    sql: CONCAT(${TABLE}.model, '-', ${TABLE}.version) ;;
+  }
+
+  measure: diff_jour {
+    type: number
+    sql: DATE_DIFF(${invoice_date},${order_date}, DAY);;
+  }
+
+
+
+
+
+  dimension: state_flag_image {
+    type: string
+    sql: ${brand} ;;
+    html:
+              {% if brand._value == "ALPINE" %}
+              <img src="https://www.retro-laser.com/wp-content/uploads/2021/12/2021-12-13-at-08-17-16.jpg" height="170" width="255">
+              {% elsif brand._value == "DACIA" %}
+              <img src="https://upload.wikimedia.org/wikipedia/fr/4/4d/Logo_Dacia.svg" height="170" width="255">
+              {% elsif brand._value == "RENAULT" %}
+              <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/Renault_2009_logo.svg" height="170" width="255">
+              {% endif %} ;;
+  }
+
+  measure: Min_diff_jour {
+    type: number
+    sql: min(${diff_jour});;
+  }
+
+  measure: Max_diff_jour {
+    type: max
+    sql: ${diff_jour};;
+
+    html: {% if value > 300 %}<p style="color: white; background-color: ##FF0000">{{ rendered_value }}</p>{% endif %};;
+  }
+
+  measure: AVG_diff_jour {
+    type: average
+    sql: ${diff_jour};;
+    html: {% if value < 100 %}<p style="color:green">{{ rendered_value }} </p>{% endif %};;
+  }
+
+
 
 
 
