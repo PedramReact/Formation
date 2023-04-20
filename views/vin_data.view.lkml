@@ -85,9 +85,6 @@ view: vin_data {
     type: string
     sql: ${TABLE}.model ;;
   }
-
-
-
 dimension_group: order_date {
   type: time
   group_label: "Order_Date_String_to_Date"
@@ -100,6 +97,10 @@ dimension_group: order_date {
   ]
   datatype: date
 }
+  dimension: order_date {
+    type: string
+    sql:  ${TABLE}.order_date   ;;
+  }
 
   dimension: order_id {
     type: string
