@@ -4,6 +4,8 @@ connection: "renault-gcp-sub-react"
 include: "/views/vin_data.view"
 include: "/views/ig_2j.view"
 include: "/views/pareto.view"
+include: "/views/data_pareto_v2.view"
+
 
 
 datagroup: foramtion_default_datagroup {
@@ -16,8 +18,10 @@ persist_with: foramtion_default_datagroup
 explore: pareto {
 }
 
-#explore: ig_2j {}
+explore: ig_2j {}
 
-#explore: data_pareto_v2 {}
+explore: data_pareto_v2 {
+
+}
 explore: vin_data {
 }

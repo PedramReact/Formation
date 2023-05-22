@@ -1,5 +1,5 @@
 view: data_pareto_v2 {
-  sql_table_name: `REACT_DEV_DATA.DATA_PARETO_V2`
+  sql_table_name: `REACT_DEV_DATA.data_pareto_v2`
     ;;
 
   dimension: annemois {
