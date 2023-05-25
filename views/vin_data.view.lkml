@@ -22,12 +22,6 @@ view: vin_data {
     sql: ${TABLE}.dealer_name ;;
   }
 
-  dimension: dealer_name_no_space {
-    type: string
-    sql: REPLACE(${dealer_name}, " ", "_");;
-
-  }
-
   dimension: engine {
     type: string
     sql: ${TABLE}.engine ;;
@@ -37,5 +31,41 @@ view: vin_data {
     type: string
     sql: ${TABLE}.fuel_type ;;
   }
+
+  dimension: model {
+    type:  string
+    sql: ${TABLE}.model ;;
+  }
+
+
+
+  #Formation Looker
+
+# Mise en place d'un count unique
+  measure: UniqueModel {
+    type: count_distinct
+    sql: ${model} ;;
+  }
+
+# Mise en place d'une fonction de remplacement
+  measure: Dealer_Name_Modifier {
+    type: string
+    sql: replace(${dealer_name},' ','-') ;;
+  }
+
+# Mise en place d'une colonne avec condition
+dimension: Type_Fuel{
+  type: string
+  sql: CASE
+          WHEN ${fuel_type} = 'DIESEL' THEN 'GASOIL'
+          WHEN ${fuel_type} = 'ELECTRIC' THEN 'ELECTRIQUE'
+          WHEN ${fuel_type} = 'PETROL' THEN 'ESSENCE'
+          WHEN ${fuel_type} = 'PETROL CNGGAZ' THEN 'GAZ'
+          WHEN ${fuel_type} = 'PETROL LPG' THEN 'GAZ'
+          ELSE 'OTHER'
+        END;;
+}
+
+
 
 }
