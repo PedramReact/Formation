@@ -37,7 +37,10 @@ view: vin_data {
     sql: ${TABLE}.model ;;
   }
 
-
+  dimension: version {
+    type: string
+    sql: ${TABLE}.version ;;
+  }
 
   #Formation Looker
 
@@ -54,7 +57,7 @@ view: vin_data {
   }
 
 # Mise en place d'une colonne avec condition
-dimension: Type_Fuel{
+  dimension: Type_Fuel{
   type: string
   sql: CASE
           WHEN ${fuel_type} = 'DIESEL' THEN 'GASOIL'
@@ -66,6 +69,10 @@ dimension: Type_Fuel{
         END;;
 }
 
-
+#Mise en place d'une concaténation
+  dimension: ModelConcat {
+    type: string
+    sql: concat(${model},"--", ${version}) ;;
+  }
 
 }
