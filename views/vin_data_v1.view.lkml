@@ -1,4 +1,4 @@
-view: vin_data {
+view: vin_data_v1 {
   sql_table_name: `REACT_DEV_DATA.Vin_Data`
     ;;
 
