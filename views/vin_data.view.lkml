@@ -189,9 +189,9 @@ view: vin_data {
 
 # Mise en place d'une mesure pour calculer le nombre de véhicule par modèle
   measure: count_model {
-    type: count_distinct
+    type: number
     group_label: "Chiffre_par_modele"
-    sql: ${model} ;;
+    sql: count(${model}) ;;
   }
 
 
