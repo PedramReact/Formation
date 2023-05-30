@@ -167,7 +167,7 @@ view: vin_data {
     sql:  CASE
         WHEN ${brand} = 'ALPINE' THEN 'https://www.retro-laser.com/wp-content/uploads/2021/12/2021-12-13-at-08-17-16.jpg'
         WHEN ${brand} = 'DACIA'   THEN 'https://motorsactu.com/wp-content/uploads/2021/06/NOUVEAU-LOGO-DACIA.jpg'
-        WHEN ${brand} = 'RENAULT' THEN 'https://upload.wikimedia.org/wikipedia/commons/4/49/Renault_2009_logo.svg'
+        WHEN ${brand} = 'RENAULT' THEN 'https://logo-marque.com/wp-content/uploads/2021/04/Renault-Logo-2021-present.jpg'
         END;;
     html: <img src={{ value }} width="125">;;
     group_label: "Affichage_Logo"
