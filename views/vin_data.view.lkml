@@ -1,4 +1,5 @@
 view: vin_data {
+
   sql_table_name: `REACT_DEV_DATA.Vin_Data`
     ;;
 
@@ -20,6 +21,13 @@ view: vin_data {
   dimension: dealer_name {
     type: string
     sql: ${TABLE}.dealer_name ;;
+
+  }
+
+  dimension: d_name_abdou {
+    type: string
+    sql: replace( ${dealer_name}, " ", "-" );;
+
   }
 
   dimension: engine {
@@ -32,9 +40,39 @@ view: vin_data {
     sql: ${TABLE}.fuel_type ;;
   }
 
+  dimension_group: invoice {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.invoice_date ;;
+  }
+
+  dimension: marginal_profit {
+    type: number
+    sql: ${TABLE}.marginal_profit ;;
+  }
+
   dimension: model {
-    type:  string
+    type: string
     sql: ${TABLE}.model ;;
+  }
+
+  dimension: order {
+    type: string
+    sql: ${TABLE}.order_date ;;
+  }
+
+  dimension: order_id {
+    type: string
+    sql: ${TABLE}.order_id ;;
   }
 
   dimension: version {
@@ -42,157 +80,169 @@ view: vin_data {
     sql: ${TABLE}.version ;;
   }
 
-  dimension: order_date{
+  measure: count {
+    type: count
+    drill_fields: [dealer_name]
+  }
+
+  measure: dist_count_abdou {
+    type: count_distinct
+    sql:  ${model} ;;
+    drill_fields: [ model]
+  }
+
+
+  measure: discount {
+    type: count_distinct
+    sql: ${version};;
+  }
+
+  measure: nombre_distinct_modeles_junaid {
+    group_label: "junaid"
+    type: count_distinct
+    sql: ${model};;
+    drill_fields: [model]
+  }
+
+  measure: count_distinct_DEB {
+    group_label: "DEB"
+    type: count_distinct
+    drill_fields: [model, count]
+    sql: model;;
+  }
+
+  dimension: dealer_name_DEB {
+    group_label: "DEB"
     type: string
+    sql: REPLACE(dealer_name," ","_") ;;
+  }
+
+  dimension: fuel_type_DEB {
+    group_label: "DEB"
+    type: string
+    sql: REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(fuel_type,"DIESEL","Gasoil"),"ELECTRIC","Electrique"),"PETROL CNGGAZ","GAZ"),"PETROL LPG","GAZ"),"PETROL","Essence") ;;
+  }
+
+  dimension: model_version_DEB {
+    group_label: "DEB"
+    type: string
+    drill_fields: [brand, model, version, catalogue_price]
+    sql: CONCAT(model,"-",version);;
+  }
+
+  dimension_group: order_date_DEB {
+    type: time
+    timeframes: [date, day_of_week, month, week, year]
+    convert_tz: no
+    datatype: date
     sql: ${TABLE}.order_date ;;
   }
 
-  dimension: invoice_date {
-    type: string
-    sql: ${TABLE}.invoice_date  ;;
+  dimension: invoice_DEB {
+    group_label: "DEB"
+    type: date
+    sql: ${invoice_date} ;;
+    html: {{rendered_value | date: "%A %e %b %Y"}} ;;
   }
 
-
-  #Formation Looker
-
-# Mise en place d'un count unique
-  measure: UniqueModel {
-    type: count_distinct
-    group_label: "Chiffre_par_modele"
-    sql: ${model} ;;
-  }
-
-# Mise en place d'une fonction de remplacement
-  measure: Dealer_Name_Modifier {
-    type: string
-    sql: replace(${dealer_name},' ','-') ;;
-  }
-
-# Mise en place d'une colonne avec condition
-  dimension: Type_Fuel{
-    type: string
-    sql: CASE
-          WHEN ${fuel_type} = 'DIESEL' THEN 'GASOIL'
-          WHEN ${fuel_type} = 'ELECTRIC' THEN 'ELECTRIQUE'
-          WHEN ${fuel_type} = 'PETROL' THEN 'ESSENCE'
-          WHEN ${fuel_type} = 'PETROL CNGGAZ' THEN 'GAZ'
-          WHEN ${fuel_type} = 'PETROL LPG' THEN 'GAZ'
-          ELSE 'OTHER'
-        END;;
-  }
-
-# Mise en place d'une concaténation
-  dimension: ModelConcat {
-    type: string
-    sql: concat(${model},"--", ${version}) ;;
-  }
-
-# Mise en place d'une dimension group avec la granularité (date, jour de la semaine, semaine, mois, années)
-# "Day_of_week" montre le 1er jours de la semaine
-  dimension_group: granularite_order_date{
-    type: time
-    timeframes: [date ,day_of_week, week, month, year]
-    sql: ${order_date} ;;
-    datatype: date
-  }
-
-# Modification du format de la date 2023-05-25 vers mercredi 25 Mai 2023
-  dimension: format_invoice_date {
-    type: string
-    group_label: "Modification de format"
-    description: "Modification du format de la date 2023-05-25 vers mercredi 25 Mai 2023"
-    sql: format_date('%A %e %b %Y', ${invoice_date}.) ;;
-  }
-
-# Mise en place de la valeur max de la colonne catalogue_price
-  measure: max_catalogue_price {
-    type:  max
-    sql: ${catalogue_price} ;;
+  measure: min_catalogue_price_DEB {
+    group_label: "DEB"
+    type: min
     value_format: "0.0€"
-    group_label: "Valeur catalogue"
-    description: "Mise en place de la valeur max de la colonne catalogue_price"
-  }
-
-# Mise en place de la valeur min de la colonne catalogue_price
-  measure: min_catalogue_price {
-    type:  min
     sql: ${catalogue_price} ;;
-    value_format: "0.0€"
-    group_label: "Valeur catalogue"
   }
 
-# Mise en place de la valeur moyenne de la colonne catalogue_price
-  measure: average_catalogue_price {
-    type:  average
+  measure: max_catalogue_price_DEB {
+    group_label: "DEB"
+    type: max
+    value_format: "0.0€"
     sql: ${catalogue_price} ;;
-    value_format: "0.0€"
-    group_label: "Valeur catalogue"
   }
 
-# Mise en place de la différence de date entre order_date & invoice_date
-  dimension: diff_order_invoice_date {
+  measure: avg_catalogue_price_DEB {
+    group_label: "DEB"
+    type: average
+    value_format: "0.0€"
+    sql: ${catalogue_price} ;;
+  }
+
+  dimension: diff_invoice_order_DEB {
+    group_label: "DEB"
     type: number
-    group_label: "Difference_Invoice_Date"
-    sql: DATE_DIFF(${invoice_date} ,${order_date},day) ;;
+    sql: DATE_DIFF(${invoice_date},${order_date_DEB_date}, day) ;;
   }
 
-  measure: min_diff_order_invoice_date {
-    type:  min
-    sql: ${diff_order_invoice_date} ;;
-    group_label: "Difference_Invoice_Date"
+  measure: min_diff_DEB {
+    group_label: "DEB"
+    type: min
+    sql: ${diff_invoice_order_DEB} ;;
   }
 
-  measure: max_diff_order_invoice_date {
-    type:  max
-    sql: ${diff_order_invoice_date} ;;
-    group_label: "Difference_Invoice_Date"
-    html: {% if value > 300 %}
-          <span style="color:red;"> {{rendered_value}}</span>
-          {% endif %};;
+  measure: max_diff_DEB {
+    group_label: "DEB"
+    type: max
+    sql: ${diff_invoice_order_DEB} ;;
   }
 
-  measure: average_diff_order_invoice_date {
-    type:  average
-    group_label: "Difference_Invoice_Date"
-    value_format: "0.00"
-    sql: ${diff_order_invoice_date} ;;
-    html: {% if value < 100 %}
-          <span style="color:green;"> {{rendered_value}}</span>
-          {% endif %};;
+  measure: avg_diff_DEB {
+    group_label: "DEB"
+    type: average
+    sql: ${diff_invoice_order_DEB} ;;
   }
 
-# Mise en place d'une dimension qui affiche le logo brand (about user choice)
-  dimension:  user_choice_brand{
+  dimension: logo_DEB {
+    group_label: "DEB"
     type: string
-    sql:  CASE
-        WHEN ${brand} = 'ALPINE' THEN 'https://www.retro-laser.com/wp-content/uploads/2021/12/2021-12-13-at-08-17-16.jpg'
-        WHEN ${brand} = 'DACIA'   THEN 'https://motorsactu.com/wp-content/uploads/2021/06/NOUVEAU-LOGO-DACIA.jpg'
-        WHEN ${brand} = 'RENAULT' THEN 'https://logo-marque.com/wp-content/uploads/2021/04/Renault-Logo-2021-present.jpg'
-        END;;
-    html: <img src={{ value }} width="125">;;
-    group_label: "Affichage_Logo"
-  }
-
-  dimension: choice_logo_brand {
     sql: ${brand} ;;
-    html:
-    {% if value == "RENAULT" %}
-    <img src="https://logo-marque.com/wp-content/uploads/2021/04/Renault-Logo-2021-present.jpg" height="170" width="255"/>
-    {% elsif value == "ALPINE" %}
-    <img src="https://www.retro-laser.com/wp-content/uploads/2021/12/2021-12-13-at-08-17-16.jpg" height="170" width="255"/>
-    {% elsif value == "DACIA"%}
-    <img src="https://motorsactu.com/wp-content/uploads/2021/06/NOUVEAU-LOGO-DACIA.jpg" height="170" width="255"/>
-
-      {% endif %};;
-    group_label: "Affichage_Logo"
+    html: {% if brand._value == "RENAULT" %}
+              <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/Renault_2009_logo.svg" height="80" width="80">
+              {% elsif brand._value == "ALPINE" %}
+              <img src="https://upload.wikimedia.org/wikipedia/fr/b/b7/Alpine_F1_Team_2021_Logo.svg" height="80" width="80">
+              {% elsif brand._value == "DACIA" %}
+              <img src="https://upload.wikimedia.org/wikipedia/commons/a/a1/Dacia-logo.png" height="80" width="80">
+              {% else %}
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png" height="170" width="170">
+              {% endif %} ;;
   }
 
-# Mise en place d'une mesure pour calculer le nombre de véhicule par modèle
-  measure: count_model {
-    type: number
-    group_label: "Chiffre_par_modele"
-    sql: count(${model}) ;;
+  parameter: grain_DEB {
+    group_label: "DEB"
+    type: string
+    allowed_value: {value:"Original Value"}
+    allowed_value: {value:"Year"}
+    allowed_value: {value:"Month"}
+    allowed_value: {value:"Week"}
   }
+
+
+  measure: modelchaymae {
+    group_label: "chaymae"
+    type: count_distinct
+    drill_fields: [model, count]
+    sql: ${model};;
+  }
+
+
+  measure: models_zobir {
+    group_label: "zobir"
+    type: count_distinct
+    drill_fields: [model, count]
+    sql: ${model};;
+  }
+
+  dimension: dealer_name_zobir {
+    group_label: "zobir"
+    type: string
+    #sql: ${dealer_name};;
+    sql: REPLACE(${TABLE}.dealer_name, " ", "-");;
+  }
+
+
+  dimension: DealerNameModif_Matveeva {
+    type: string
+    sql: REPLACE(${TABLE}.dealer_name, " ", "_") ;;
+  }
+
 
 
 }
